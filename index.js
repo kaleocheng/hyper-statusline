@@ -3,6 +3,9 @@ const { exec } = require('child_process');
 const color = require('color');
 const afterAll = require('after-all-results');
 const tildify = require('tildify');
+const fs = require('fs');
+const homedir = require('os').homedir();
+const path = require('path');
 
 exports.decorateConfig = (config) => {
     const colorForeground = color(config.foregroundColor || '#fff');
@@ -110,6 +113,13 @@ exports.decorateConfig = (config) => {
                 -webkit-mask-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNCIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDE0IDEyIj48cGF0aCBmaWxsPSIjMDAwMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xMywyIEw3LDIgTDcsMSBDNywwLjM0IDYuNjksMCA2LDAgTDEsMCBDMC40NSwwIDAsMC40NSAwLDEgTDAsMTEgQzAsMTEuNTUgMC40NSwxMiAxLDEyIEwxMywxMiBDMTMuNTUsMTIgMTQsMTEuNTUgMTQsMTEgTDE0LDMgQzE0LDIuNDUgMTMuNTUsMiAxMywyIEwxMywyIFogTTYsMiBMMSwyIEwxLDEgTDYsMSBMNiwyIEw2LDIgWiIvPjwvc3ZnPg==');
                 -webkit-mask-size: 14px 12px;
             }
+            .footer_footer .item_ssh {
+                padding-left: 21px;
+            }
+            .footer_footer .item_ssh:before {
+                -webkit-mask-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iMjYiIGhlaWdodD0iMjYiCnZpZXdCb3g9IjAgMCAyNiAyNiIKc3R5bGU9IiBmaWxsOiMwMDAwMDA7Ij48ZyBpZD0ic3VyZmFjZTEiPjxwYXRoIHN0eWxlPSIgIiBkPSJNIDMgMCBDIDEuMzQ3NjU2IDAgMCAxLjM0NzY1NiAwIDMgTCAwIDIzIEMgMCAyNC42NTIzNDQgMS4zNDc2NTYgMjYgMyAyNiBMIDE0IDI2IEMgMTUuNjUyMzQ0IDI2IDE3IDI0LjY1MjM0NCAxNyAyMyBMIDE3IDMgQyAxNyAxLjM0NzY1NiAxNS42NTIzNDQgMCAxNCAwIFogTSAxNi42MjUgMCBDIDE3LjQ2NDg0NCAwLjczNDM3NSAxOCAxLjgwMDc4MSAxOCAzIEwgMTggMjMgQyAxOCAyNC4xOTkyMTkgMTcuNDY0ODQ0IDI1LjI2NTYyNSAxNi42MjUgMjYgTCAyMyAyNCBDIDI0LjUzMTI1IDIzLjI5Njg3NSAyNiAyMi42NTYyNSAyNiAyMSBMIDI2IDUgQyAyNiAzLjM0Mzc1IDI0LjU3ODEyNSAyLjYyNSAyMyAyIFogTSAzIDIgTCAxNCAyIEMgMTQuNTUwNzgxIDIgMTUgMi40NDkyMTkgMTUgMyBMIDE1IDEyIEMgMTUgMTIuNTUwNzgxIDE0LjU1MDc4MSAxMyAxNCAxMyBMIDMgMTMgQyAyLjQ0OTIxOSAxMyAyIDEyLjU1MDc4MSAyIDEyIEwgMiAzIEMgMiAyLjQ0OTIxOSAyLjQ0OTIxOSAyIDMgMiBaIE0gNCAzIEMgMy40NDkyMTkgMyAzIDMuNDQ5MjE5IDMgNCBMIDMgNiBDIDMgNi41NTA3ODEgMy40NDkyMTkgNyA0IDcgTCAxMyA3IEMgMTMuNTUwNzgxIDcgMTQgNi41NTA3ODEgMTQgNiBMIDE0IDQgQyAxNCAzLjQ0OTIxOSAxMy41NTA3ODEgMyAxMyAzIFogTSA0IDggQyAzLjQ0OTIxOSA4IDMgOC40NDkyMTkgMyA5IEwgMyAxMSBDIDMgMTEuNTUwNzgxIDMuNDQ5MjE5IDEyIDQgMTIgTCAxMyAxMiBDIDEzLjU1MDc4MSAxMiAxNCAxMS41NTA3ODEgMTQgMTEgTCAxNCA5IEMgMTQgOC40NDkyMTkgMTMuNTUwNzgxIDggMTMgOCBaIE0gOC41IDE2LjkzNzUgQyA5LjM2MzI4MSAxNi45Mzc1IDEwLjA2MjUgMTcuNjM2NzE5IDEwLjA2MjUgMTguNSBDIDEwLjA2MjUgMTkuMzYzMjgxIDkuMzYzMjgxIDIwLjA2MjUgOC41IDIwLjA2MjUgQyA3LjYzNjcxOSAyMC4wNjI1IDYuOTM3NSAxOS4zNjMyODEgNi45Mzc1IDE4LjUgQyA2LjkzNzUgMTcuNjM2NzE5IDcuNjM2NzE5IDE2LjkzNzUgOC41IDE2LjkzNzUgWiAiPjwvcGF0aD48L2c+PC9zdmc+');
+                -webkit-mask-size: 14px 12px;
+            }
             .footer_footer .item_branch {
                 padding-left: 16px;
             }
@@ -147,6 +157,7 @@ exports.decorateConfig = (config) => {
 
 let pid;
 let cwd;
+let ssh;
 let git = {
     branch: '',
     remote: '',
@@ -168,10 +179,30 @@ const setCwd = (pid, action) => {
         exec(`lsof -p ${pid} | awk '$4=="cwd"' | tr -s ' ' | cut -d ' ' -f9-`, (err, stdout) => {
             cwd = stdout.trim();
             setGit(cwd);
+            setSSH(pid);
         });
     }
 
 };
+
+const setSSH = (pid) => {
+    const filepath = path.join(homedir, '.ssh', 'status', pid.toString())
+    fs.access(filepath, error => {
+        if (!error) {
+            fs.readFile(filepath, { encoding: 'utf-8' }, function (err, data) {
+                if (!err) {
+                    ssh = data;
+                } else {
+                    console.log(err);
+                }
+            });
+        } else {
+            ssh = '';
+            return;
+        }
+    });
+
+}
 
 const isGit = (dir, cb) => {
     exec(`git rev-parse --is-inside-work-tree`, { cwd: dir }, (err) => {
@@ -271,6 +302,7 @@ exports.decorateHyper = (Hyper, { React }) => {
 
             this.state = {
                 cwd: '',
+                ssh: '',
                 branch: '',
                 remote: '',
                 dirty: 0,
@@ -297,6 +329,9 @@ exports.decorateHyper = (Hyper, { React }) => {
                 React.createElement(Hyper, Object.assign({}, this.props, {
                     customInnerChildren: existingChildren.concat(React.createElement('footer', { className: 'footer_footer' },
                         React.createElement('div', { className: 'footer_group group_overflow' },
+                            React.createElement('div', { className: 'component_component component_ssh' },
+                                React.createElement('div', { className: 'component_item item_icon item_ssh', title: `${this.state.ssh ? this.state.ssh : 'nossh'}`, hidden: !this.state.ssh }, this.state.ssh),
+                            ),
                             React.createElement('div', { className: 'component_component component_cwd' },
                                 React.createElement('div', { className: 'component_item item_icon item_cwd item_clickable', title: this.state.cwd, onClick: this.handleCwdClick, hidden: !this.state.cwd }, this.state.cwd ? tildify(String(this.state.cwd)) : '')
                             ),
@@ -315,6 +350,7 @@ exports.decorateHyper = (Hyper, { React }) => {
             this.interval = setInterval(() => {
                 this.setState({
                     cwd: cwd,
+                    ssh: ssh,
                     branch: git.branch,
                     remote: git.remote,
                     dirty: git.dirty,
@@ -354,6 +390,10 @@ exports.middleware = (store) => (next) => (action) => {
         case 'SESSION_SET_ACTIVE':
             pid = uids[action.uid].pid;
             setCwd(pid);
+            break;
+        case 'SESSION_PTY_DATA':
+            pid = uids[action.uid].pid;
+            setSSH(pid);
             break;
     }
 
