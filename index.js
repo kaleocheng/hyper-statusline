@@ -46,33 +46,6 @@ exports.decorateConfig = (config) => {
             ${config.css || ''}
             .terms_terms {
                 margin-bottom: 30px;
-                margin-right: 10%;
-            }
-            .sider_info {
-                position: absolute;
-                display: flex;
-                top: 0;
-                right: 0;
-                width: 10%;
-                padding-top: 50px;
-                min-width: 200px;
-                max-width: 400px;
-                pointer-events: none;
-                overflow: scroll;
-                z-index: 99;
-            }
-            .sider_info .cwd_files{
-
-            }
-            .cwd_files .cwd_file {
-                padding-top: 10px;
-            }
-
-            .cwd_file .cwd_dir {
-                color: #0287ff;
-            }
-            .cwd_file .cwd_link {
-                color: #00d7d7;
             }
             .footer_footer {
                 display: flex;
@@ -185,33 +158,11 @@ exports.decorateConfig = (config) => {
 let pid;
 let cwd;
 let ssh;
-let cwdFiles = [];
 let git = {
     branch: '',
     remote: '',
     dirty: 0,
     ahead: 0
-}
-
-const fileType = (f) => {
-    switch (f.slice(-1)) {
-        case '/':
-            return 'cwd_dir';
-        case '@':
-            return 'cwd_link';
-        default:
-            return 'cwd_file';
-    }
-}
-
-const setLs = (path) => {
-    exec(`ls -F`, { cwd: path }, (err, stdout) => {
-        if (err) {
-            console.log(err);
-        } else {
-            cwdFiles = stdout.trim().split('\n');
-        }
-    });
 }
 
 const setCwd = (pid, action) => {
@@ -228,7 +179,7 @@ const setCwd = (pid, action) => {
         exec(`lsof -p ${pid} | awk '$4=="cwd"' | tr -s ' ' | cut -d ' ' -f9-`, (err, stdout) => {
             cwd = stdout.trim();
             setGit(cwd);
-            setLs(cwd);
+            setSSH(pid);
         });
     }
 
@@ -352,7 +303,6 @@ exports.decorateHyper = (Hyper, { React }) => {
             this.state = {
                 cwd: '',
                 ssh: '',
-                cwdFiles: [],
                 branch: '',
                 remote: '',
                 dirty: 0,
@@ -377,29 +327,21 @@ exports.decorateHyper = (Hyper, { React }) => {
 
             return (
                 React.createElement(Hyper, Object.assign({}, this.props, {
-                    customInnerChildren: existingChildren.concat(
-                        React.createElement('footer', { className: 'footer_footer' },
-                            React.createElement('div', { className: 'footer_group group_overflow' },
-                                React.createElement('div', { className: 'component_component component_ssh' },
-                                    React.createElement('div', { className: 'component_item item_icon item_ssh', title: `${this.state.ssh ? this.state.ssh : 'nossh'}`, hidden: !this.state.ssh }, this.state.ssh),
-                                ),
-                                React.createElement('div', { className: 'component_component component_cwd' },
-                                    React.createElement('div', { className: 'component_item item_icon item_cwd item_clickable', title: this.state.cwd, onClick: this.handleCwdClick, hidden: !this.state.cwd }, this.state.cwd ? tildify(String(this.state.cwd)) : '')
-                                ),
-                                React.createElement('div', { className: 'component_component component_git' },
-                                    React.createElement('div', { className: `component_item item_icon item_branch ${this.state.remote ? 'item_clickable' : ''} ${(this.state.dirty || this.state.ahead) ? 'item_branch_dirty' : ''}`, title: this.state.remote, onClick: this.handleBranchClick, hidden: !this.state.branch }, this.state.branch),
-                                    React.createElement('div', { className: 'component_item item_icon item_number item_dirty', title: `${this.state.dirty} dirty ${this.state.dirty > 1 ? 'files' : 'file'}`, hidden: !this.state.dirty }, this.state.dirty),
-                                    React.createElement('div', { className: 'component_item item_icon item_number item_ahead', title: `${this.state.ahead} ${this.state.ahead > 1 ? 'commits' : 'commit'} ahead`, hidden: !this.state.ahead }, this.state.ahead)
-                                )
+                    customInnerChildren: existingChildren.concat(React.createElement('footer', { className: 'footer_footer' },
+                        React.createElement('div', { className: 'footer_group group_overflow' },
+                            React.createElement('div', { className: 'component_component component_ssh' },
+                                React.createElement('div', { className: 'component_item item_icon item_ssh', title: `${this.state.ssh ? this.state.ssh : 'nossh'}`, hidden: !this.state.ssh }, this.state.ssh),
                             ),
+                            React.createElement('div', { className: 'component_component component_cwd' },
+                                React.createElement('div', { className: 'component_item item_icon item_cwd item_clickable', title: this.state.cwd, onClick: this.handleCwdClick, hidden: !this.state.cwd }, this.state.cwd ? tildify(String(this.state.cwd)) : '')
+                            ),
+                            React.createElement('div', { className: 'component_component component_git' },
+                                React.createElement('div', { className: `component_item item_icon item_branch ${this.state.remote ? 'item_clickable' : ''} ${(this.state.dirty || this.state.ahead) ? 'item_branch_dirty' : ''}`, title: this.state.remote, onClick: this.handleBranchClick, hidden: !this.state.branch }, this.state.branch),
+                                React.createElement('div', { className: 'component_item item_icon item_number item_dirty', title: `${this.state.dirty} dirty ${this.state.dirty > 1 ? 'files' : 'file'}`, hidden: !this.state.dirty }, this.state.dirty),
+                                React.createElement('div', { className: 'component_item item_icon item_number item_ahead', title: `${this.state.ahead} ${this.state.ahead > 1 ? 'commits' : 'commit'} ahead`, hidden: !this.state.ahead }, this.state.ahead)
+                            )
                         ),
-                        React.createElement('div', { className: 'sider_info', title: 'sider' },
-                            React.createElement('div', { className: 'cwd_files', title: 'current files' },
-                                ...cwdFiles.map(f => {
-                                    return React.createElement('div', { className: `cwd_file ${fileType(f)}` }, f)
-                                })
-                            ),
-                        ))
+                    ))
                 }))
             );
         }
@@ -409,7 +351,6 @@ exports.decorateHyper = (Hyper, { React }) => {
                 this.setState({
                     cwd: cwd,
                     ssh: ssh,
-                    cwdFiles: cwdFiles,
                     branch: git.branch,
                     remote: git.remote,
                     dirty: git.dirty,
